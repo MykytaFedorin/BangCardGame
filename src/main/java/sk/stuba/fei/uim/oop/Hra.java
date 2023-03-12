@@ -6,23 +6,27 @@ import java.util.Collections;
 
 public class Hra {
     public void hrat(){
-        String label = "Provide a number of players: ";
-        int pocet_hracov = ZKlavesnice.readInt(label);
-        ArrayList<Hrac> hraci= new ArrayList<Hrac>();
-        for(int i=0;i<pocet_hracov;i++){
-            hraci.add(new Hrac());
-        }
-        ArrayList<Karta> karty = new ArrayList<Karta>();
-        karty_init(karty);
+        ArrayList<Hrac> hraci = hraci_init();
+        ArrayList<Karta> karty = karty_init();
         Collections.shuffle(karty);
-        for(Karta karta: karty){
-            System.out.println(karta.getClass());
-        }
     }
     private void share_cards(Hrac[] players, Karta[] cards){
 
     }
-    private void karty_init(ArrayList<Karta> karty){
+    private ArrayList<Hrac> hraci_init(){
+        String label = "Zadajte pocet hracov: ";
+        int pocet_hracov = ZKlavesnice.readInt(label);
+        if(pocet_hracov<2 || pocet_hracov>4){
+            System.out.println("Zadany pocet hracov nie je platny. Zadajte cislo od 2 po 4: ");
+        }
+        ArrayList<Hrac> hraci= new ArrayList<Hrac>();
+        for(int i=0;i<pocet_hracov;i++){
+            hraci.add(new Hrac());
+        }
+        return hraci;
+    }
+    private ArrayList<Karta> karty_init(){
+        ArrayList<Karta> karty = new ArrayList<Karta>();
         for(int i=0; i<30;i++){
             karty.add(new Bang());
         }
@@ -50,5 +54,6 @@ public class Hra {
         for(int i=68; i<71;i++){
             karty.add(new Vazenie());
         }
+        return karty;
     }
 }
