@@ -15,10 +15,16 @@ public class Hra {
     }
     private ArrayList<Hrac> hraci_init(){
         String label = "Zadajte pocet hracov: ";
-        int pocet_hracov = ZKlavesnice.readInt(label);
-        if(pocet_hracov<2 || pocet_hracov>4){
-            System.out.println("Zadany pocet hracov nie je platny. Zadajte cislo od 2 po 4: ");
-        }
+        int pocet_hracov = 0;
+        while(true){
+            pocet_hracov = ZKlavesnice.readInt(label);
+            if(pocet_hracov>=2 && pocet_hracov<=4){
+                break;
+            }
+            else{
+                System.out.println("Zadany pocet hracov nie je platny. Zadajte cislo od 2 po 4: ");
+            }
+        };
         ArrayList<Hrac> hraci= new ArrayList<Hrac>();
         for(int i=0;i<pocet_hracov;i++){
             hraci.add(new Hrac());
