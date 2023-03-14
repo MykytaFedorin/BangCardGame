@@ -9,9 +9,42 @@ public class Hra {
         ArrayList<Hrac> hraci = hraci_init();
         ArrayList<Karta> karty = karty_init();
         Collections.shuffle(karty);
+        rozdat_karty(hraci, karty);
+        hlavny_cyklus(hraci, karty);
     }
-    private void share_cards(Hrac[] players, Karta[] cards){
-
+    private void hlavny_cyklus(ArrayList<Hrac> hraci, ArrayList<Karta> balicek_kart){
+        boolean game_over;
+        do{
+            for(Hrac hrac: hraci){
+                hrac.tahanie(balicek_kart);
+                //zahranie();
+                //odhadzovanie();
+            }
+            game_over = game_over_check(hraci);
+        }while(!game_over);
+    }
+    private boolean game_over_check(ArrayList<Hrac> hraci) {
+        int pocet_zivych_hracov = 0;
+        for (Hrac hrac : hraci) {
+            if (hrac.getZivoty() > 0) {
+                pocet_zivych_hracov += 1;
+            }
+        }
+        return pocet_zivych_hracov == 1;
+    }
+    private void rozdat_karty(ArrayList<Hrac> hraci, ArrayList<Karta> karty){
+        for(int i=0;i<hraci.size()*4;i++){
+            Karta karta_z_balika = karty.get(i);
+            Hrac hrac_na_rade = hraci.get(i%hraci.size());
+            ArrayList<Karta> karty_hraca = hrac_na_rade.getKarty_v_ruke();
+            karty_hraca.add(karta_z_balika);
+        }
+        for(Hrac hrac: hraci){
+            System.out.println("-------------");
+            for(Karta karta: hrac.getKarty_v_ruke()){
+                System.out.println(karta.getClass());
+            }
+        }
     }
     private ArrayList<Hrac> hraci_init(){
         String label = "Zadajte pocet hracov: ";
