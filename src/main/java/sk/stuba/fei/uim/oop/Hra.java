@@ -8,6 +8,7 @@ public class Hra {
     public void hrat(){
         ArrayList<Hrac> hraci = hraci_init();
         ArrayList<Karta> karty = karty_init();
+        nepriatelia_init(hraci);
         Collections.shuffle(karty);
         rozdat_karty(hraci, karty);
         hlavny_cyklus(hraci, karty);
@@ -39,12 +40,6 @@ public class Hra {
             ArrayList<Karta> karty_hraca = hrac_na_rade.getKarty_v_ruke();
             karty_hraca.add(karta_z_balika);
         }
-        for(Hrac hrac: hraci){
-            System.out.println("-------------");
-            for(Karta karta: hrac.getKarty_v_ruke()){
-                System.out.println(karta.getClass());
-            }
-        }
     }
     private ArrayList<Hrac> hraci_init(){
         String label = "Zadajte pocet hracov: ";
@@ -63,6 +58,19 @@ public class Hra {
             hraci.add(new Hrac());
         }
         return hraci;
+    }
+    private void nepriatelia_init(ArrayList<Hrac> hraci){
+        ArrayList<Hrac> nepriatelia = new ArrayList<Hrac>();
+        ArrayList<Hrac> hraci_kopia = new ArrayList<Hrac>(hraci);
+        for(Hrac hrac: hraci){
+            for (Hrac hrac_kopia:hraci_kopia){
+                if(!hrac.equals(hrac_kopia)){
+                    nepriatelia.add(hrac_kopia);
+                }
+            }
+            hrac.setNepriatelia(new ArrayList<Hrac>(nepriatelia));
+            nepriatelia.clear();
+        }
     }
     private ArrayList<Karta> karty_init(){
         ArrayList<Karta> karty = new ArrayList<Karta>();
