@@ -1,16 +1,16 @@
-package sk.stuba.fei.uim.oop;
+package sk.stuba.fei.uim.oop.hrac;
 
+import sk.stuba.fei.uim.oop.cards.Barrel;
 import sk.stuba.fei.uim.oop.cards.Dynamit;
 import sk.stuba.fei.uim.oop.cards.Karta;
 import sk.stuba.fei.uim.oop.cards.Vazenie;
-
-import javax.management.ValueExp;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Hrac {
     private ArrayList<Karta> karty_v_ruke;
-    private ArrayList<Karta> karty_pred_hracom;
+    private HashSet<Karta> karty_pred_hracom;
     private ArrayList<Hrac> nepriatelia;
     private Random randomajzer;
     private int zivoty;
@@ -18,7 +18,7 @@ public class Hrac {
         this.randomajzer = new Random();
         this.karty_v_ruke = new ArrayList<Karta>();
         this.zivoty = 4;
-        this.karty_pred_hracom = new ArrayList<Karta>();
+        this.karty_pred_hracom = new HashSet<Karta>();
         this.nepriatelia = new ArrayList<Hrac>();
     }
     public Hrac(Hrac hrac){
@@ -40,12 +40,12 @@ public class Hrac {
         return zivoty;
     }
 
-    public ArrayList<Karta> getKarty_pred_hracom() {
+    public HashSet<Karta> getKarty_pred_hracom() {
         return karty_pred_hracom;
     }
 
-    public void setKarty_pred_hracom(ArrayList<Karta> karty_pred_hracom) {
-        this.karty_pred_hracom = karty_pred_hracom;
+    public void setKarty_pred_hracom(Karta karta) {
+        this.karty_pred_hracom.add(karta);
     }
 
     public ArrayList<Hrac> getNepriatelia() {
@@ -68,17 +68,31 @@ public class Hrac {
         this.zivoty = zivoty;
     }
     public void tahanie(ArrayList<Karta> balicek){
-        potiahnut_karty(balicek);
         kontrola_efektov();
+        potiahnut_karty(balicek);
     }
     public void zahranie(){
         int nahodny_pocet = this.randomajzer.nextInt(this.karty_v_ruke.size());
         for(int i = 0; i < nahodny_pocet;i++){
             Karta karta = vyber_karty();
+            zahrat_kartu(karta);
             this.karty_v_ruke.remove(karta);
-
         }
-
+    }
+    private void zahrat_kartu(Karta karta){
+        if(karta instanceof Barrel || karta instanceof Dynamit){
+            this.karty_pred_hracom.add(karta);
+        }
+        else if(karta instanceof Vazenie){
+            Hrac nepriatel = vybrat_nepriatela();
+            nepriatel.setKarty_pred_hracom(karta);
+        }
+        else{
+            karta.akcia(this.nepriatelia);
+        }
+    }
+    private Hrac vybrat_nepriatela(){
+        return this.nepriatelia.get(this.randomajzer.nextInt(this.nepriatelia.size()));
     }
     private Karta vyber_karty(){
         int nahodne_cislo = this.randomajzer.nextInt(this.karty_v_ruke.size());
@@ -100,15 +114,15 @@ public class Hrac {
             }
         }
         if(vybrane_karty.size()==1){
-            vybrane_karty.get(0).akcia();
+            vybrane_karty.get(0).akcia(this);
         } else if (vybrane_karty.size()==2) {
             for(Karta karta: vybrane_karty){
                 if(karta instanceof Dynamit){
-                    karta.akcia();
+                    karta.akcia(this);
                     vybrane_karty.remove(karta);
                 }
             }
-            vybrane_karty.get(0).akcia();
+            vybrane_karty.get(0).akcia(this);
         }
     }
 }

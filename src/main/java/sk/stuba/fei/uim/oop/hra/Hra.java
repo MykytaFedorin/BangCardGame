@@ -1,11 +1,14 @@
-package sk.stuba.fei.uim.oop;
+package sk.stuba.fei.uim.oop.hra;
 import java.util.ArrayList;
+
+import sk.stuba.fei.uim.oop.hrac.Hrac;
 import sk.stuba.fei.uim.oop.cards.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 import java.util.Collections;
 
 public class Hra {
     public void hrat(){
+
         ArrayList<Hrac> hraci = hraci_init();
         ArrayList<Karta> karty = karty_init();
         nepriatelia_init(hraci);
@@ -18,7 +21,7 @@ public class Hra {
         do{
             for(Hrac hrac: hraci){
                 hrac.tahanie(balicek_kart);
-                //zahranie();
+                hrac.zahranie();
                 //odhadzovanie();
             }
             game_over = game_over_check(hraci);
