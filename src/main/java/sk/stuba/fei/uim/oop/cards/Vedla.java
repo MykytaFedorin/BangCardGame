@@ -5,14 +5,13 @@ import sk.stuba.fei.uim.oop.hrac.Hrac;
 import java.util.ArrayList;
 
 public class Vedla extends HnedaKarta {
-
     @Override
     public void akcia(Hrac hrac) {
 
     }
 
     @Override
-    public void akcia(ArrayList<Hrac> cielove_hrac) {
-
+    public String nazov_karty() {
+        return "Vedla";
     }
 }

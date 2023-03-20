@@ -6,13 +6,12 @@ import java.util.ArrayList;
 
 public class Barrel extends ModraKarta{
 
-    @Override
     public void akcia(Hrac hrac) {
-
+        System.out.println("    vylozim pred seba Barrel");
     }
 
     @Override
-    public void akcia(ArrayList<Hrac> cielove_hraci) {
-
+    public String nazov_karty() {
+        return "Barrel";
     }
 }

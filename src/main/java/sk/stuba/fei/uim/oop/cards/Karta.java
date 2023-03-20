@@ -6,6 +6,5 @@ import java.util.ArrayList;
 
 public abstract class Karta {
     public abstract void akcia(Hrac hrac);
-    public abstract void akcia(ArrayList<Hrac> cielove_hraci);
-
+    public abstract String nazov_karty();
 }
