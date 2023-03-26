@@ -9,8 +9,14 @@ public class Dynamit extends ModraKarta{
     public void akcia(Hrac hrac){
         Random randomajzer = hrac.getRandomajzer();
         int sanca = randomajzer.nextInt(8);
+        System.out.print("Kontrolujem efekt Dyniamitu");
         if(sanca==1){
-            hrac.setZivoty(hrac.getZivoty()-3);
+            if((hrac.getZivoty()-3)>=0){
+                hrac.setZivoty(hrac.getZivoty()-3);
+            }
+            else if((hrac.getZivoty()-3)<0){
+                hrac.setZivoty(0);
+            }
             System.out.println("-vybuchol mi dynamit");
         }
         else{

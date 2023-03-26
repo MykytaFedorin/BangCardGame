@@ -5,6 +5,9 @@ import sk.stuba.fei.uim.oop.hrac.Hrac;
 import sk.stuba.fei.uim.oop.hrac.PorovnavacHracov;
 import sk.stuba.fei.uim.oop.karty.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
+import sk.stuba.fei.uim.oop.vynimky.VynimkaKoncaHry;
+import sk.stuba.fei.uim.oop.vynimky.VynimkaVynechavaniaTahu;
+
 import java.util.Collections;
 
 public class Hra {
@@ -29,17 +32,22 @@ public class Hra {
             hrac.setPredosly_hrac(predosly_hrac);
         }
     }
-    private void urobit_tah(Hrac hrac){
+    private void urobit_tah(Hrac hrac) throws VynimkaKoncaHry, VynimkaVynechavaniaTahu {
         if (hrac.getZivoty() > 0) {
             hrac.print_info();
             hrac.tahanie();
             if (!hrac.isJe_vo_vazani()) {
-                hrac.zahranie();
+                try {
+                    hrac.zahranie();
+                }catch(VynimkaKoncaHry e){
+                    throw new VynimkaKoncaHry();
+                }
                 hrac.odhadzovanie();
                 hrac.setJe_vo_vazani(false);
             }
         } else {
             this.mrtvi_hraci += 1;
+            throw new VynimkaVynechavaniaTahu("Hrac vynechal tah");
         }
     }
     private void hlavny_cyklus(ArrayList<Hrac> hraci, ArrayList<Karta> balicek_kart) {
@@ -49,13 +57,23 @@ public class Hra {
         while (true) {
             i = i%hraci.size();
             Hrac hrac = hraci.get(i);
+            balicek_kart.addAll(hrac.getOdhadzovaci_balicek());
+            hrac.getOdhadzovaci_balicek().clear();
             hrac.getNepriatelia().sort(new PorovnavacHracov());
             if (prve_kolo) {
                 zapamatat_predoslych(hraci);
                 prve_kolo = false;
             }
-            urobit_tah(hrac);
-            if(game_over_check(hraci)){
+            try {
+                urobit_tah(hrac);
+                Hrac nasledujuci_hrac = hraci.get((i+1)%hraci.size());
+                if(nasledujuci_hrac != null){
+                    nasledujuci_hrac.setPredosly_hrac(hrac);
+                }
+            }catch(VynimkaVynechavaniaTahu e){
+                //hrac zomrel
+            }
+            catch(VynimkaKoncaHry e){
                 break;
             }
             i+=1;

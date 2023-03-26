@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.oop.hrac;
 
 import sk.stuba.fei.uim.oop.karty.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
+import sk.stuba.fei.uim.oop.vynimky.VynimkaKoncaHry;
 import sk.stuba.fei.uim.oop.vynimky.VynimkaVynechavaniaTahu;
 
 
@@ -122,8 +123,11 @@ public class Hrac implements Comparable<Hrac>{
     public void tahanie(){
         System.out.println("1. Tahanie");
         kontrola_efektov();
-        if(!this.isJe_vo_vazani()){
+        if(!this.isJe_vo_vazani() && this.zivoty > 0){
             potiahnut_karty();
+        }
+        else if(this.zivoty<=0){
+            System.out.println("Ja zomrel!");
         }
     }
     public void print_info_small(){
@@ -132,7 +136,7 @@ public class Hrac implements Comparable<Hrac>{
         System.out.println("Karty pred vami: ");
         vypis_obsah_balika(this.karty_pred_hracom);
     }
-    public void zahranie(){
+    public void zahranie() throws VynimkaKoncaHry {
         System.out.println("2. Zahranie");
         while(true){
             if(this.karty_v_ruke.size()==0){
@@ -149,10 +153,38 @@ public class Hrac implements Comparable<Hrac>{
                     break;
                 }
                 zahrat_kartu(karta);
+                try {
+                    kontrola_konca_hry();
+                }catch (VynimkaKoncaHry e){
+                    throw new VynimkaKoncaHry();
+                }
                 this.odhadzovaci_balicek.add(karta);
                 this.karty_v_ruke.remove(karta);
+
             }
         }
+    }
+    private void kontrola_konca_hry() throws VynimkaKoncaHry{
+        for(Hrac nepriatel: this.nepriatelia){
+            if(nepriatel.getZivoty()>0){
+                return;
+            }
+            else if(nepriatel.getZivoty()==0){
+                try {
+                    if(nepriatel.getKarty_pred_hracom().size()>0) {
+                        this.odhadzovaci_balicek.addAll(nepriatel.getKarty_pred_hracom());
+                        nepriatel.getKarty_pred_hracom().clear();
+                    }
+                    if(nepriatel.getKarty_v_ruke().size()>0) {
+                        this.odhadzovaci_balicek.addAll(nepriatel.getKarty_v_ruke());
+                        nepriatel.getKarty_v_ruke().clear();
+                    }
+                }catch (NullPointerException e){
+                    //
+                }
+            }
+        }
+        throw new VynimkaKoncaHry();
     }
     public void odhadzovanie(){
         System.out.println("3. Odhadzovanie");
@@ -188,6 +220,7 @@ public class Hrac implements Comparable<Hrac>{
         }
     }
     private void vypis_nepriatelov(){
+        this.nepriatelia.sort(new PorovnavacHracov());
         System.out.println("Nepriatelia: ");
         int i = 0;
         for(Hrac hrac: this.nepriatelia){
@@ -215,6 +248,7 @@ public class Hrac implements Comparable<Hrac>{
         }
     }
     private Hrac vybrat_nepriatela(){
+        this.nepriatelia.sort(new PorovnavacHracov());
         String vyhlaska = "Zadajte cislo nepriatela";
         while (true){
             int cislo_nepriatela = ZKlavesnice.readInt(vyhlaska);
