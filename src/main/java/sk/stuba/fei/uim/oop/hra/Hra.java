@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.oop.hra;
 import java.util.ArrayList;
 
 import sk.stuba.fei.uim.oop.hrac.Hrac;
+import sk.stuba.fei.uim.oop.hrac.PorovnavacHracov;
 import sk.stuba.fei.uim.oop.karty.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 import java.util.Collections;
@@ -48,6 +49,7 @@ public class Hra {
         while (true) {
             i = i%hraci.size();
             Hrac hrac = hraci.get(i);
+            hrac.getNepriatelia().sort(new PorovnavacHracov());
             if (prve_kolo) {
                 zapamatat_predoslych(hraci);
                 prve_kolo = false;

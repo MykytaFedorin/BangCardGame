@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Hrac {
+public class Hrac implements Comparable<Hrac>{
     private ArrayList<Karta> karty_v_ruke;
     private ArrayList<Karta> karty_pred_hracom;
     private ArrayList<Hrac> nepriatelia;
@@ -122,7 +122,9 @@ public class Hrac {
     public void tahanie(){
         System.out.println("1. Tahanie");
         kontrola_efektov();
-        potiahnut_karty();
+        if(!this.isJe_vo_vazani()){
+            potiahnut_karty();
+        }
     }
     public void print_info_small(){
         System.out.println("Vase karty v ruke: ");
@@ -134,7 +136,7 @@ public class Hrac {
         System.out.println("2. Zahranie");
         while(true){
             if(this.karty_v_ruke.size()==0){
-                System.out.println("hrac nema ziadne karty v ruke");
+                System.out.println("Hrac na tahu nema ziadne dalsie karty v ruke");
                 break;
             }
             else {
@@ -156,11 +158,15 @@ public class Hrac {
         System.out.println("3. Odhadzovanie");
         int odhodit = this.getKarty_v_ruke().size()-this.zivoty;
         if(odhodit>0){
+            System.out.println("Odhodil som "+odhodit+" karty\n");
             for(int i=0;i<odhodit;i++){
                 Karta karta = this.karty_v_ruke.get(0);
                 this.odhadzovaci_balicek.add(karta);
                 this.karty_v_ruke.remove(karta);
             }
+        }
+        else {
+            System.out.println("Hrac nepotrebuje odhodit ziadne karty\n");
         }
     }
     private void zahraj_modru(Karta karta){
@@ -268,7 +274,7 @@ public class Hrac {
             this.karty_v_ruke.add(karta1);
         }
         else if(this.balicek.size()==1){
-            System.out.println("    taham 1 kartu");
+            System.out.println("Taham 1 kartu");
             Karta karta0 = this.balicek.get(0);
             this.balicek.remove(0);
             this.karty_v_ruke.add(karta0);
@@ -303,7 +309,18 @@ public class Hrac {
             }
         }
         zoradit_efekty(dynamit, vazanie);
-        this.karty_pred_hracom.remove(dynamit);
-        this.karty_pred_hracom.remove(vazanie);
+        if(dynamit != null){
+            this.odhadzovaci_balicek.add(dynamit);
+            this.karty_pred_hracom.remove(dynamit);
+        }
+        if(vazanie != null){
+            this.odhadzovaci_balicek.add(vazanie);
+            this.karty_pred_hracom.remove(vazanie);
+        }
+    }
+
+    @Override
+    public int compareTo(Hrac o) {
+        return Integer.compare(this.zivoty, o.getZivoty());
     }
 }
