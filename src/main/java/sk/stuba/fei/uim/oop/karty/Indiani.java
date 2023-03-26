@@ -1,14 +1,12 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.karty;
 
 import sk.stuba.fei.uim.oop.hrac.Hrac;
-
-import java.util.ArrayList;
 
 public class Indiani extends HnedaKarta{
     @Override
     public void akcia(Hrac hrac) {
 
-        System.out.println("    hram kartou Indiane proti vsetkym");
+        System.out.println("Hrate kartou Indiane proti vsetkym");
         for(Hrac nepriatel: hrac.getNepriatelia()){
             boolean stav = vyhodit_bang(nepriatel);
             if(stav){
@@ -21,7 +19,7 @@ public class Indiani extends HnedaKarta{
                 String meno = nepriatel.getMeno();
                 String zivoty = String.valueOf(nepriatel.getZivoty());
                 String karty_v_ruke = String.valueOf(nepriatel.getKarty_v_ruke().size());
-                System.out.print(" "+meno+"["+zivoty+", "+karty_v_ruke+"]"+" stratil jeden zivot");
+                System.out.println(" "+meno+"["+zivoty+", "+karty_v_ruke+"]"+" stratil jeden zivot");
             }
         }
     }

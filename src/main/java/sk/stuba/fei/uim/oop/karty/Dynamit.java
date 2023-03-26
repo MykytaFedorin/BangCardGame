@@ -1,8 +1,7 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.karty;
 
 import sk.stuba.fei.uim.oop.hrac.Hrac;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Dynamit extends ModraKarta{

@@ -1,8 +1,6 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.karty;
 
 import sk.stuba.fei.uim.oop.hrac.Hrac;
-
-import java.util.ArrayList;
 
 public class Pivo extends HnedaKarta{
 
@@ -10,7 +8,7 @@ public class Pivo extends HnedaKarta{
     public void akcia(Hrac hrac) {
         String vnutro = String.valueOf(hrac.getZivoty())+", "+String.valueOf(hrac.getKarty_v_ruke().size());
         String stav = hrac.getMeno()+"["+vnutro+"]";
-        System.out.println("    Hram kartou Pivo -> +1 zivot");
+        System.out.println("Hram kartou Pivo -> +1 zivot");
         hrac.setZivoty(hrac.getZivoty()+1);
     }
 

@@ -2,7 +2,7 @@ package sk.stuba.fei.uim.oop.hra;
 import java.util.ArrayList;
 
 import sk.stuba.fei.uim.oop.hrac.Hrac;
-import sk.stuba.fei.uim.oop.cards.*;
+import sk.stuba.fei.uim.oop.karty.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 import java.util.Collections;
 
@@ -28,33 +28,42 @@ public class Hra {
             hrac.setPredosly_hrac(predosly_hrac);
         }
     }
-    private void hlavny_cyklus(ArrayList<Hrac> hraci, ArrayList<Karta> balicek_kart){
-        boolean game_over; boolean prve_kolo = true;
-        do{
-            for(int i=0;i<hraci.size(); i++) {
-                Hrac hrac = hraci.get(i);
-                if (prve_kolo) {
-                    zapamatat_predoslych(hraci);
-                    prve_kolo = false;
-                }
-                if (hrac.getZivoty()>0) {
-                    hrac.print_info();
-                    hrac.tahanie();
-                    if (!hrac.isJe_vo_vazani()) {
-                        hrac.zahranie();
-                        hrac.odhadzovanie();
-                        hrac.setJe_vo_vazani(false);
-                    }
-                }
-                else{
-                    this.mrtvi_hraci+=1;
-                }
+    private void urobit_tah(Hrac hrac){
+        if (hrac.getZivoty() > 0) {
+            hrac.print_info();
+            hrac.tahanie();
+            if (!hrac.isJe_vo_vazani()) {
+                hrac.zahranie();
+                hrac.odhadzovanie();
+                hrac.setJe_vo_vazani(false);
             }
-            game_over = game_over_check(hraci);
-        }while(!game_over);
-        for(Hrac hrac: hraci){
-            if(hrac.getZivoty()>0){
-                System.out.println("Vyhral "+hrac.getMeno());
+        } else {
+            this.mrtvi_hraci += 1;
+        }
+    }
+    private void hlavny_cyklus(ArrayList<Hrac> hraci, ArrayList<Karta> balicek_kart) {
+        boolean game_over;
+        boolean prve_kolo = true;
+        int i = 0;
+        while (true) {
+            i = i%hraci.size();
+            Hrac hrac = hraci.get(i);
+            if (prve_kolo) {
+                zapamatat_predoslych(hraci);
+                prve_kolo = false;
+            }
+            urobit_tah(hrac);
+            if(game_over_check(hraci)){
+                break;
+            }
+            i+=1;
+        }
+        vypisat_vytaza(hraci);
+    }
+    private void vypisat_vytaza(ArrayList<Hrac> hraci){
+        for (Hrac hrac : hraci) {
+            if (hrac.getZivoty() > 0) {
+                System.out.println("Vyhral " + hrac.getMeno());
             }
         }
     }
